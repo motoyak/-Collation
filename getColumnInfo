@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -eu
+
+CONF_FILE="./.my.conf"
+ENV_FILE="./.env"
+
+function usage () {
+  echo -n "usage:"
+  echo "${0} fileName"
+  exit 1
+}
+
+if [ $# -ne 1 ]; then
+  usage
+fi
+
+outputFile="outputs/${1}"
+
+. ${ENV_FILE}
+
+mysql --defaults-extra-file=${CONF_FILE} -h ${MYSQL_HOST} ${MYSQL_DB} -e "show create database ${MYSQL_DB}" --batch --skip-column-names > ${outputFile}
+mysql --defaults-extra-file=${CONF_FILE} -h ${MYSQL_HOST} $MYSQL_DB -e "show tables" --batch --skip-column-names | xargs -I{} echo 'show create table `'{}'`;' | mysql --defaults-extra-file=${CONF_FILE} -h ${MYSQL_HOST} ${MYSQL_DB} | sed -e 's/\\n//g' >> ${outputFile}

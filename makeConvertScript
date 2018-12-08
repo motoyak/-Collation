@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -eu
+
+CHARSET="utf8mb4"
+COLLATION="utf8mb4_bin"
+
+CONF_FILE="./.my.conf"
+ENV_FILE="./.env"
+
+. ${ENV_FILE} 
+
+(echo "ALTER DATABASE \`${MYSQL_DB}\` DEFAULT CHARACTER SET ${CHARSET} COLLATE ${COLLATION};"; mysql --defaults-extra-file=${CONF_FILE} -h ${MYSQL_HOST} ${MYSQL_DB} -e "SHOW TABLES" --batch --skip-column-names | xargs -I{} echo "ALTER TABLE \`"{}"\` CONVERT TO CHARACTER SET ${CHARSET} COLLATE ${COLLATION};") > $CONVERT_SCRIPT_FILE

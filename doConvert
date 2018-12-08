@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -eu
+
+CONF_FILE="./.my.conf"
+ENV_FILE="./.env"
+
+. ${ENV_FILE}
+
+time mysql --defaults-extra-file=${CONF_FILE} -h ${MYSQL_HOST} ${MYSQL_DB} < ${CONVERT_SCRIPT_FILE}
