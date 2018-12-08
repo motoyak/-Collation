@@ -6,4 +6,4 @@ ENV_FILE="./.env"
 
 . ${ENV_FILE}
 
-time mysql --defaults-extra-file=${CONF_FILE} -h ${MYSQL_HOST} ${MYSQL_DB} < ${CONVERT_SCRIPT_FILE}
+mysql --defaults-extra-file=${CONF_FILE} -h ${MYSQL_HOST} ${MYSQL_DB} < ${CONVERT_SCRIPT_FILE}
